@@ -1,4 +1,4 @@
-#gra: Kamień, papier nożyczki
+#gra: Kamień, papier nożyczki.
 
 import random
 response = None
