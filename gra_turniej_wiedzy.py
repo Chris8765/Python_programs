@@ -1,6 +1,7 @@
 #Turniej wiedzy
 #Gra sprawdza wiedzę ogólną, odczytując dane ze zwykłego pliku tekstowego
 
+
 import sys
 
 def open_file(file_name,mode):
@@ -36,7 +37,9 @@ def next_block(the_file):
     
     explanation = next_line(the_file)
     
-    return category, question, answers, correct, explanation
+    points = next_line(the_file)
+    
+    return category, question, answers, correct, explanation, points
 
 def welcome(title):
     """Przywitaj gracza i pobierz jego nazwę."""
@@ -44,13 +47,14 @@ def welcome(title):
     print("\t\t", title, "\n")
 
 def main():
+    points_sum = 0
     trivia_file = open_file("kwiz.txt", "r")
     title = next_line(trivia_file)
     welcome(title)
     score = 0
     
     #pobierz pierwszy blok
-    category, question, answers, correct, explanation = next_block(trivia_file)
+    category, question, answers, correct, explanation, points = next_block(trivia_file)
     while category:
         #zadaj pytanie
         print(category)
@@ -63,19 +67,22 @@ def main():
         #sprawdź odpowiedź
         if answer == correct:
             print("\nOdpowiedź prawidłowa!", end=" ")
-            score +=1
+            print("Punkty za tą poprawną odpowiedź to:", points)
+            score += int(points)
+            points_sum += int(points)
+            print("Twoje wszystkie punkty zdobyte do tej pory to: ", score)
         else:
             print("\nOdpowiedz niepoprawna.", end=" ")
-        print(explanation)
-        print("Wynik:", score, "\n\n")
-        
+            print(explanation)
+            print("Twoje wszystkie punkty zdobyte do tej pory to:", score, "\n\n")
+            points_sum += int(points)
         #pobierz kolejny blok
-        category, question, answers, correct, explanation = next_block(trivia_file)
+        category, question, answers, correct, explanation, points = next_block(trivia_file)
         
     trivia_file.close()
         
     print("To było ostatnie pytanie!")
-    print("Twój końcowy wynik wynosi", score)
+    print("Twój końcowy wynik wynosi", score , "na:", points_sum)
 
 main() 
 input("\n\nAby zakończyć program, nacisnij klawisz Enter.")  
