@@ -4,6 +4,11 @@
 
 import sys
 
+def p_name():
+    
+    player_name = input ("Jak się nazywasz?  ")
+    return player_name
+
 def open_file(file_name,mode):
     """Otwórz plik."""
     try:
@@ -42,11 +47,19 @@ def next_block(the_file):
     return category, question, answers, correct, explanation, points
 
 def welcome(title):
-    """Przywitaj gracza i pobierz jego nazwę."""
+    """Przywitaj gracza."""
     print("\t\t Witaj w turnieju wiedzy!\n")
     print("\t\t", title, "\n")
+    
+def save_winner_and_score(player_name, score_last):
+    
+    text_file = open("winner_and_score.txt", "a+")
+    text_file.write(player_name + " ---- " +str(score_last)+"\n")
+    text_file.close()
 
 def main():
+    
+    player_name = p_name()
     points_sum = 0
     trivia_file = open_file("kwiz.txt", "r")
     title = next_line(trivia_file)
@@ -80,9 +93,10 @@ def main():
         category, question, answers, correct, explanation, points = next_block(trivia_file)
         
     trivia_file.close()
-        
+    
     print("To było ostatnie pytanie!")
-    print("Twój końcowy wynik wynosi", score , "na:", points_sum)
-
+    print(player_name ,"twój końcowy wynik wynosi", score , "na:", points_sum)
+    score_last = score 
+    save_winner_and_score(player_name, score_last)
 main() 
 input("\n\nAby zakończyć program, nacisnij klawisz Enter.")  
