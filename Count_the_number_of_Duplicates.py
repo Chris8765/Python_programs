@@ -4,7 +4,7 @@
 #The input string can be assumed to contain only 
 #alphabets (both uppercase and lowercase) and numeric digits. 
 
-text = str(input("Give me text?"))
+text = str(input("Give me text: "))
 
 def duplicate_count(text):
     length = int(len(text))
