@@ -3,6 +3,7 @@
 
 
 import sys
+import operator
 
 def p_name():
     
@@ -52,10 +53,37 @@ def welcome(title):
     print("\t\t", title, "\n")
     
 def save_winner_and_score(player_name, score_last):
+    winner_list = []
+    entry = [player_name, score_last]
     
-    text_file = open("winner_and_score.txt", "a+")
-    text_file.write(player_name + " ---- " +str(score_last)+"\n")
-    text_file.close()
+    with open("winner_and_score.txt", "r+") as text_file_1:
+        for line in text_file_1:
+            print(line)
+            entry_old = line.split(",")
+            print(entry_old)
+            player_name_old = entry_old[0]
+            score_old = int(entry_old[1])
+            winner_list.append([player_name_old, score_old])
+            
+
+
+        winner_list.append(entry)
+        winner_list = sorted(winner_list, key=operator.itemgetter(1), reverse = True)
+        del winner_list [5:]
+        
+        print(winner_list)
+    
+    with open("winner_and_score.txt", "w") as text_file_2: 
+        pass
+    with open("winner_and_score.txt", "w") as text_file_3: 
+        for position in winner_list:
+            if len(position[0]) < 5:
+                value_1 = (str(position[0]) + ", \t\t"+ str(position[1])+"\n")
+            else:
+                value_1 = (str(position[0]) + ", \t"+ str(position[1])+"\n")
+            text_file_3.write(value_1)
+        
+ 
 
 def main():
     

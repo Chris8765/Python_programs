@@ -1,0 +1,5 @@
+Asia, 		45
+Jan, 		45
+Stachu, 	35
+Wojtek, 	30
+Grzegorz, 	30
