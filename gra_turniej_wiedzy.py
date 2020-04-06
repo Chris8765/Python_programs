@@ -4,6 +4,8 @@
 
 import sys
 import operator
+import os
+import pickle, shelve
 
 def p_name():
     
@@ -52,36 +54,51 @@ def welcome(title):
     print("\t\t Witaj w turnieju wiedzy!\n")
     print("\t\t", title, "\n")
     
-def save_winner_and_score(player_name, score_last):
+def save_winner_and_score_5(player_name, score_last):
     winner_list = []
     entry = [player_name, score_last]
     
-    with open("winner_and_score.txt", "r+") as text_file_1:
-        for line in text_file_1:
-            print(line)
-            entry_old = line.split(",")
-            print(entry_old)
-            player_name_old = entry_old[0]
-            score_old = int(entry_old[1])
-            winner_list.append([player_name_old, score_old])
-            
-
-
+    if not os.path.isfile("winner_and_score_5.dat"):
+        with open ("winner_and_score_5.dat", "w") as trash:
+            pass
+    #print(os.path.getsize("winner_and_score_5.dat"))
+    
+    if os.path.getsize("winner_and_score_5.dat") > 0:
+        
+        #binary_file = open("winner_and_score_5.dat", "wb+")
+        winner_list = pickle.load( open( "winner_and_score_5.dat", "rb" ))
+        print("Nie jestem pusty")
+        print(winner_list)
         winner_list.append(entry)
+        print(winner_list)
         winner_list = sorted(winner_list, key=operator.itemgetter(1), reverse = True)
         del winner_list [5:]
-        
-        print(winner_list)
     
-    with open("winner_and_score.txt", "w") as text_file_2: 
-        pass
-    with open("winner_and_score.txt", "w") as text_file_3: 
-        for position in winner_list:
-            if len(position[0]) < 5:
-                value_1 = (str(position[0]) + ", \t\t"+ str(position[1])+"\n")
-            else:
-                value_1 = (str(position[0]) + ", \t"+ str(position[1])+"\n")
-            text_file_3.write(value_1)
+        #print(winner_list)
+    
+        pickle.dump(winner_list, open( "winner_and_score_5.dat", "wb" ))
+        
+
+
+        
+    else:
+        winner_list = entry
+        #binary_file = open("winner_and_score_5.dat", "wb")
+    
+        pickle.dump([winner_list], open( "winner_and_score_5.dat", "wb" ))
+        
+        
+        
+        
+        
+        
+   
+
+      
+            
+            
+            
+
         
  
 
@@ -125,6 +142,6 @@ def main():
     print("To było ostatnie pytanie!")
     print(player_name ,"twój końcowy wynik wynosi", score , "na:", points_sum)
     score_last = score 
-    save_winner_and_score(player_name, score_last)
+    save_winner_and_score_5(player_name, score_last)
 main() 
 input("\n\nAby zakończyć program, nacisnij klawisz Enter.")  
