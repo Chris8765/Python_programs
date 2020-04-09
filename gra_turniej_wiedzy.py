@@ -5,7 +5,7 @@
 import sys
 import operator
 import os
-import pickle, shelve
+import shelve
 
 def p_name():
     
@@ -54,50 +54,38 @@ def welcome(title):
     print("\t\t Witaj w turnieju wiedzy!\n")
     print("\t\t", title, "\n")
     
-def save_winner_and_score_5(player_name, score_last):
-    winner_list = []
+def save_winner_and_score_shelve(player_name, score_last):
+    
     entry = [player_name, score_last]
     
-    if not os.path.isfile("winner_and_score_5.dat"):
-        with open ("winner_and_score_5.dat", "w") as trash:
-            pass
-    #print(os.path.getsize("winner_and_score_5.dat"))
     
-    if os.path.getsize("winner_and_score_5.dat") > 0:
-        
-        #binary_file = open("winner_and_score_5.dat", "wb+")
-        winner_list = pickle.load( open( "winner_and_score_5.dat", "rb" ))
-        print("Nie jestem pusty")
-        print(winner_list)
-        winner_list.append(entry)
-        print(winner_list)
-        winner_list = sorted(winner_list, key=operator.itemgetter(1), reverse = True)
-        del winner_list [5:]
-    
-        #print(winner_list)
-    
-        pickle.dump(winner_list, open( "winner_and_score_5.dat", "wb" ))
-        
-
-
-        
+    if not os.path.isfile("winner_and_score_shelve.dat"):
+        with shelve.open("winner_and_score_shelve") as shelve_for_me:
+            shelve_for_me["key_for_me"] = [entry]
+            shelve_for_me.sync()
+          
     else:
-        winner_list = entry
-        #binary_file = open("winner_and_score_5.dat", "wb")
-    
-        pickle.dump([winner_list], open( "winner_and_score_5.dat", "wb" ))
         
-        
-        
-        
-        
-        
-   
+        with shelve.open("winner_and_score_shelve") as shelve_for_me:
+            old_list_for_me = shelve_for_me["key_for_me"]
+            
+            
+            print("Old list: ", old_list_for_me)
+            
+            old_list_for_me.append(entry)
+            new_list_for_me = sorted(old_list_for_me, key=operator.itemgetter(1), reverse = True)
+            del new_list_for_me [5:]
+            
+                                    
+            shelve_for_me["key_for_me"] = new_list_for_me
+            shelve_for_me.sync()
 
-      
+            print("Nowa lista z append, sortowaniem i del to: ", new_list_for_me)
             
-            
-            
+        
+          
+        
+
 
         
  
@@ -142,6 +130,6 @@ def main():
     print("To było ostatnie pytanie!")
     print(player_name ,"twój końcowy wynik wynosi", score , "na:", points_sum)
     score_last = score 
-    save_winner_and_score_5(player_name, score_last)
+    save_winner_and_score_shelve(player_name, score_last)
 main() 
 input("\n\nAby zakończyć program, nacisnij klawisz Enter.")  
