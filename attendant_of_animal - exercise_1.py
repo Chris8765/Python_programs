@@ -30,14 +30,14 @@ class Critter(object):
     def talk(self):
         print("Nazywam się", self.name, "i jestem", self.mood, "teraz.\n")
         self.__pass_time()
-    def eat(self, food = 0):
+    def eat(self):
         food = int(input("Ile pożywienia chcesz dać zwierzakowi? (wybierz wartosc z zakresu 1 - 10) "))
         print("Mniam, mniam. Dziękuję.")
         self.hunger -= food
         if self.hunger < 0:
             self.hunger = 0
         self.__pass_time()
-    def play(self, fun = 0):
+    def play(self):
         fun = int(input("Ile czasu chcesz poswiecic swojemu zwierzakowi w skali od 1 -10 [minut]? "))
         print("Hura!")
         self.boredom -= fun
@@ -45,8 +45,8 @@ class Critter(object):
             self.boredom = 0
         self.__pass_time()
     def volume(self):
-        print("Obecny poziom głodu (jeżeli 0 to max najedzony, a > 15 wsciekły) to: ", self.hunger)
-        print("Obecny poziom szczęscia (jeżeli 0 to  max szczęsliwy, a ) to: ", self.boredom)
+        print("Obecny poziom głodu (jeżeli 0 to max najedzony) to: ", self.hunger)
+        print("Obecny poziom szczęscia (jeżeli 0 to  max szczęsliwy, a> 15 wciekly ) to: ", self.boredom)
 def main():
     crit_name = input("Jak chcesz nazwać swojego zwierzaka?: ")
     crit = Critter(crit_name)

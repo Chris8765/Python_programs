@@ -111,15 +111,6 @@ class Application_second(Frame):
 
 
 
-
-
-
-
-
-
-
-
-
 class Application_start(Frame):
     def __init__(self, master):
         """Inicjalizuj ramkę."""
