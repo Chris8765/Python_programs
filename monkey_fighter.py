@@ -51,7 +51,12 @@ def walka(malpa, rycesz):
 
 def pojedynek (x, y):
     print(x, "zostal zaatakowany przez", y)
+    while y.atak() - x.obrona() > 0:
+        y.atak()
+        x.obrona()
     obrazenia = y.atak() - x.obrona()   
+    
+    
     print(x, "stracil", obrazenia, "punktow zycia.")
     x.straconeZycie(obrazenia)
 
