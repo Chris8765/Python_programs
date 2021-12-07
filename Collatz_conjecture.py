@@ -7,9 +7,11 @@ def collatz(number):
         number = 3 * number + 1
     return number
 
-number = int(input('Give me your number: '))
+try:
+    number = int(input('Give me your number: '))
+    while number != 1:
+        number = collatz(number)
+        print(number)
 
-while number != 1:
-    number = collatz(number)
-    print(number)
-
+except ValueError:
+    print('Only integers allowed!')
