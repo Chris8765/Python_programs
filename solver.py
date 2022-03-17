@@ -6,7 +6,7 @@ class Solver(object):
 
         # card_strength = {card : strength}
         card_strength = {"2" : "1.0", "3":"2.0", "4":"3.0", "5":"4.0", "6":"5.0", "7":"6.0",
-            "8":"7.0","9":"8.0", "T":"9.0", "J":"10.0", "Q":"11.0", "K":"12.0", "A" :"13.0"}
+            "8":"7.0","9":"8.0", "T":"9.0", "J":"10.0", "Q":"11.0", "K":"12.0", "A":"13.0"}
 
         straight_superiority = "A23456789TJQKA"
 
@@ -222,6 +222,7 @@ class Solver(object):
     def straight_th(self, cards_from_the_table_and_cards_from_the_hand):
 
         list_straight_control_th =[]
+
         for card in cards_from_the_table_and_cards_from_the_hand:
             list_straight_control_th.append(card[0])
 
@@ -297,7 +298,7 @@ class Solver(object):
 
 
 
-        list_of_five_cards_the_same_color =[]
+        list_of_five_cards_the_same_color = []
 
 
         for suit, value in colors_dic_th.items():
@@ -404,14 +405,20 @@ class Solver(object):
 
 
     def omaha_holdem(self, line_list):
+
+        values_to_control_only_rank_oh = {}
+        dic_hand_with_rank_oh = {}
+
         table_cards_oh = line_list[0]
         board_oh = [table_cards_oh[0:2], table_cards_oh[2:4], table_cards_oh[4:6], table_cards_oh[6:8], table_cards_oh[8:10]]
-        print(board_oh)
+        cards_from_the_table_and_cards_from_the_hand = board_oh
 
         for position in line_list[1:]:
             players_cards_oh =[position[0:2], position[2:4], position[4:6], position[6:8]]
-            print(players_cards_oh)
+
             max_value_oh, rank_1_oh = self.hand_evaluation_oh(board_oh, players_cards_oh)
+
+   
 
 
 
@@ -456,6 +463,7 @@ class Solver(object):
 
         max_value_oh = max (rank_1_oh, rank_2_oh, rank_3_oh, rank_4_oh)
 
+        print(max_value_oh, rank_1_oh)
         return max_value_oh, rank_1_oh
 
 
@@ -506,7 +514,8 @@ class Solver(object):
             decimal_place = 10 ** counter_decimal_place
             rank += float(value / decimal_place)
 
-        return rank
+
+        return 0.01 * rank
 
     def flush_check_oh(self, board_oh, players_cards_oh):
 
@@ -566,109 +575,6 @@ class Solver(object):
 
         return 0
 
-
-    def straight_and_straight_flush_oh(self, board_oh, players_cards_oh):
-        list_of_nine_cards_oh = []
-
-        for x in range(0,len(board_oh)):
-            list_of_nine_cards_oh.append(board_oh[x])
-        for x in range(0,len(players_cards_oh)):
-            list_of_nine_cards_oh.append(players_cards_oh[x])
-
-
-
-        print(list_of_nine_cards_oh)
-
-
-        list_strength_oh = []
-
-        #assigning strength to individual cards:
-        for card in list_of_nine_cards_oh:
-            strength_oh = card_strength.get(card[0])
-            list_strength_oh.append(float(strength_oh))
-
-        list_strength_oh = list(set(list_strength_oh))
-
-        print(list_strength_oh)
-
-        list_strength_oh.sort()     #sorting cards by their strength
-
-
-        sort_card_string_oh =""
-
-        #returning the sorted cards:
-        for position in list_strength_oh:
-            sort_card_string_oh += card_strength_reverse.get(str(position))
-
-        print(sort_card_string_oh)
-
-
-
-
-        #checking if the sorted layout is really straight:
-        if straight_superiority.find(sort_card_string_oh[0:5]) != -1 and self.check_2_from_hand(sort_card_string_oh[0:5], players_cards_oh) == True:
-
-            if check_streight_flush(self, sort_card_string_oh[0:5],  list_of_nine_cards_oh) == True:
-                return 21 + self.high_card_oh(sort_card_string_oh[0:5])
-            else:
-                return 17 + self.high_card_oh(sort_card_string_oh[0:5])
-
-        elif straight_superiority.find(sort_card_string_oh[1:6]) != -1 and self.check_2_from_hand(sort_card_string_oh[1:6], players_cards_oh) == True:
-            if check_streight_flush(self, sort_card_string_oh[1:6], list_of_nine_cards_oh) == True:
-                return 21 + self.high_card_oh(sort_card_string_oh[1:6])
-            else:
-                return 17 + self.high_card_oh(sort_card_string_oh[1:6])
-
-        elif straight_superiority.find(sort_card_string_oh[2:7]) != -1 and self.check_2_from_hand(sort_card_string_oh[2:7], players_cards_oh) == True:
-            if check_streight_flush(self, sort_card_string_oh[2:7], list_of_nine_cards_oh) == True:
-                return 21 + self.high_card_oh(sort_card_string_oh[2:7])
-            else:
-                return 17 + self.high_card_oh(sort_card_string_oh[2:7])
-
-        elif straight_superiority.find(sort_card_string_oh[3:8]) != -1 and self.check_2_from_hand(sort_card_string_oh[3:8], players_cards_oh) == True:
-            if check_streight_flush(self, sort_card_string_oh[3:8], list_of_nine_cards_oh) == True:
-                return 21 + self.high_card_oh(sort_card_string_oh[3:8])
-            else:
-                return 17 + self.high_card_oh(sort_card_string_oh[3:8])
-
-        elif straight_superiority.find(sort_card_string_oh[4:9]) != -1 and self.check_2_from_hand(sort_card_string_oh[4:9], players_cards_oh) == True:
-            if check_streight_flush(self, sort_card_string_oh[4:9], list_of_nine_cards_oh) == True:
-                return 21 + self.high_card_oh(sort_card_string_oh[4:9])
-            else:
-                return 17 + self.high_card_oh(sort_card_string_oh[4:9])
-
-        elif straight_superiority.find(sort_card_string_oh[5:10]) != -1 and self.check_2_from_hand(sort_card_string_oh[5:10], players_cards_oh) == True:
-            if check_streight_flush(self, sort_card_string_oh[5:10], list_of_nine_cards_oh) == True:
-                return 21 + self.high_card_oh(sort_card_string_oh[5:10])
-            else:
-                return 17 + self.high_card_oh(sort_card_string_oh[5:10])
-
-        elif "A" in sort_card_string_oh:
-            second_sting_oh = "A" + sort_card_string_oh[:-1]
-            if straight_superiority.find(second_sting_oh) != -1 and self.check_2_from_hand(second_sting_oh, players_cards_oh) == True:
-                if check_streight_flush(self, second_sting_oh, list_of_nine_cards_oh) == True:
-                    return 21 + self.high_card_oh(second_sting_oh)
-                else:
-                    return 17 + self.high_card_oh(second_sting_oh)
-            else:
-                return 0
-
-        else:
-            return 0
-
-    def check_2_from_hand(self, sort_card_string_oh, players_cards_oh):
-        counter = 0
-
-        for card in sort_card_string_oh:
-            if card[0] in players_cards_oh:
-                counter +=1
-
-        if counter == 2:
-            return True
-        else:
-            return False
-
-
     def check_streight_flush(self, sort_card_string_oh, list_of_nine_cards_oh):
 
         color_of_5_cards = []
@@ -685,6 +591,138 @@ class Solver(object):
             return True
         else:
             return False
+
+
+    def straight_and_straight_flush_oh(self, board_oh, players_cards_oh):
+        list_of_nine_cards_oh = []
+
+        for x in range(0,len(board_oh)):
+            list_of_nine_cards_oh.append(board_oh[x])
+        for x in range(0,len(players_cards_oh)):
+            list_of_nine_cards_oh.append(players_cards_oh[x])
+
+
+
+
+
+
+        list_strength_oh = []
+
+        #assigning strength to individual cards:
+        for card in list_of_nine_cards_oh:
+            strength_oh = card_strength.get(card[0])
+            list_strength_oh.append(float(strength_oh))
+
+        list_strength_oh = list(set(list_strength_oh))
+
+
+
+        list_strength_oh.sort()     #sorting cards by their strength
+
+
+        sort_card_string_oh =""
+
+        #returning the sorted cards:
+        for position in list_strength_oh:
+            sort_card_string_oh += card_strength_reverse.get(str(position))
+
+
+
+
+
+
+        #checking if the sorted layout is really straight:
+        if straight_superiority.find(sort_card_string_oh[0:5]) != -1 and self.check_2_from_hand(sort_card_string_oh[0:5], players_cards_oh) == True:
+
+            if self.check_streight_flush(sort_card_string_oh[0:5],  list_of_nine_cards_oh) == True:
+                return 21 + self.high_card_oh(sort_card_string_oh[0:5], players_cards_oh)
+            else:
+                return 17 + self.high_card_oh(sort_card_string_oh[0:5], players_cards_oh)
+
+        elif straight_superiority.find(sort_card_string_oh[1:6]) != -1 and self.check_2_from_hand(sort_card_string_oh[1:6], players_cards_oh) == True:
+            if self.check_streight_flush(sort_card_string_oh[1:6], list_of_nine_cards_oh) == True:
+                return 21 + self.high_card_oh(sort_card_string_oh[1:6], players_cards_oh)
+            else:
+                return 17 + self.high_card_oh(sort_card_string_oh[1:6], players_cards_oh)
+
+        elif straight_superiority.find(sort_card_string_oh[2:7]) != -1 and self.check_2_from_hand(sort_card_string_oh[2:7], players_cards_oh) == True:
+            if self.check_streight_flush(sort_card_string_oh[2:7], list_of_nine_cards_oh) == True:
+                return 21 + self.high_card_oh(sort_card_string_oh[2:7], players_cards_oh)
+            else:
+                return 17 + self.high_card_oh(sort_card_string_oh[2:7], players_cards_oh)
+
+        elif straight_superiority.find(sort_card_string_oh[3:8]) != -1 and self.check_2_from_hand(sort_card_string_oh[3:8], players_cards_oh) == True:
+            if self.check_streight_flush(sort_card_string_oh[3:8], list_of_nine_cards_oh) == True:
+                return 21 + self.high_card_oh(sort_card_string_oh[3:8], players_cards_oh)
+            else:
+                return 17 + self.high_card_oh(sort_card_string_oh[3:8], players_cards_oh)
+
+        elif straight_superiority.find(sort_card_string_oh[4:9]) != -1 and self.check_2_from_hand(sort_card_string_oh[4:9], players_cards_oh) == True:
+            if self.check_streight_flush(sort_card_string_oh[4:9], list_of_nine_cards_oh) == True:
+                return 21 + self.high_card_oh(sort_card_string_oh[4:9], players_cards_oh)
+            else:
+                return 17 + self.high_card_oh(sort_card_string_oh[4:9], players_cards_oh)
+
+        elif straight_superiority.find(sort_card_string_oh[5:10]) != -1 and self.check_2_from_hand(sort_card_string_oh[5:10], players_cards_oh) == True:
+            if self.check_streight_flush(sort_card_string_oh[5:10], list_of_nine_cards_oh) == True:
+                return 21 + self.high_card_oh(sort_card_string_oh[5:10], players_cards_oh)
+            else:
+                return 17 + self.high_card_oh(sort_card_string_oh[5:10], players_cards_oh)
+
+        elif "A" in sort_card_string_oh:
+            second_sting_oh = "A" + sort_card_string_oh[:-1]
+            if straight_superiority.find(second_sting_oh) != -1 and self.check_2_from_hand(second_sting_oh, players_cards_oh) == True:
+                if check_streight_flush(self, second_sting_oh, list_of_nine_cards_oh) == True:
+                    return 21 + self.high_card_oh(second_sting_oh)
+                else:
+                    return 17 + self.high_card_oh(second_sting_oh)
+            else:
+                return 0
+
+        else:
+            return 0
+
+
+    #it checks if exactly two cards are from the hand, i.e. 3 are from the table(straight)
+    def check_2_from_hand(self, sort_card_string_oh, players_cards_oh):
+        counter = 0
+
+        players_cards_oh_without_colour = []
+        for card in players_cards_oh:
+            players_cards_oh_without_colour.append(card[0])
+
+        for card in sort_card_string_oh:
+            if card[0] in players_cards_oh_without_colour:
+                counter +=1
+
+        if counter == 2:
+            return True
+        else:
+            return False
+
+    #it checks if exactly two cards are from the hand, i.e. 3 are from the table(full_house)
+    def check_2_from_hand_full_house(self, repeating_cards, players_cards_oh):
+        counter = 0
+
+        players_cards_oh_without_colour = []
+        for card in players_cards_oh:
+            players_cards_oh_without_colour.append(card[0])
+
+
+        for card in players_cards_oh_without_colour:
+            if card[0] in repeating_cards:
+                counter +=1
+
+        if counter == 2:
+            return True
+        else:
+            return False
+
+
+
+
+
+
 
 
     def repetition_of_cards_oh(self, board_oh, players_cards_oh):
@@ -707,20 +745,88 @@ class Solver(object):
 
 
 
+    #case check: two pairs, four of a kind
+    def check_two_cards_from_hand(self, repeating_cards, players_cards_oh):
+
+        players_cards_oh_without_colour = []
+        for card in players_cards_oh:
+            players_cards_oh_without_colour.append(card[0])
+
+
+        counter = 0
+
+
+        for card in players_cards_oh_without_colour:
+            if card in repeating_cards:
+                counter += 1
+
+        if counter == 1 or counter == 2:
+
+            return True
+        else:
+            return False
+
+    def check_three_of_kind(self, repeating_cards, players_cards_oh):
+        counter = 0
+
+        players_cards_oh_without_colour = []
+        for card in players_cards_oh:
+            players_cards_oh_without_colour.append(card[0])
+
+
+
+        for card in players_cards_oh_without_colour:
+            if card in repeating_cards:
+
+                counter += 1
+
+        if counter <= 2:
+
+            return True
+        else:
+
+            return False
+
+
+
+
+
 
     def kit_oh(self, board_oh, players_cards_oh):
         cards_dic_oh = self.repetition_of_cards_oh(board_oh, players_cards_oh)
-        print(cards_dic_oh)
+
         list_of_rep_oh = list(cards_dic_oh.values())
-        print("$^%")
-        cards_dic_oh_swap ={value:key for key, value in cards_dic_oh.items()}
-        print(cards_dic_oh_swap)
+
+        repeating_cards = ""
+        repeating_cards_three = ""
+        repeating_cards_four = ""
+
+        for card, amount in cards_dic_oh.items():
+            if amount == 2:
+                repeating_cards += card * 2
+
+        for card, amount in cards_dic_oh.items():
+            if amount == 3:
+                repeating_cards_three += card * 3
+
+        for card, amount in cards_dic_oh.items():
+            if amount == 4:
+                repeating_cards_four += card * 4
+
+        repeating_cards_full_house = repeating_cards + repeating_cards_three
+
+
+
+
+
 
 
         rank = 0
         one_pair_oh = False
+
         three_of_a_kind_oh = False
 
+        # checking the existence of one_pair
         if list_of_rep_oh.count(2) == 1: #checking the existence of one_pair
             one_pair_oh = True
 
@@ -730,14 +836,39 @@ class Solver(object):
 
             rank = 14.0 + 0.01 * value_of_pair_card_oh
 
-        if list_of_rep_oh.count(2) == 2 and self.check_2_from_hand(sort_card_string_oh, players_cards_oh): #checking the existence of two_pair
-            two_pairs = True
+        # checking the existence of two_pair
+        if list_of_rep_oh.count(2) >= 2 and self.check_two_cards_from_hand(repeating_cards, players_cards_oh) == True: #checking the existence of two_pair
 
 
+            names_of_two_pair_card_oh = [k for k, v in cards_dic_oh.items() if v == 2]
+
+            names_of_two_pair_card_oh.sort(reverse=True)
+
+            value_of_first_pair_card_oh = float(card_strength[names_of_two_pair_card_oh[0]])
+            value_of_second_pair_card_oh = float(card_strength[names_of_two_pair_card_oh[1]])
+
+            rank = 15.0 + 0.01 * value_of_first_pair_card_oh + 0.0001 * value_of_second_pair_card_oh
+
+        if list_of_rep_oh.count(3) >=1 and self.check_three_of_kind(repeating_cards_three, players_cards_oh) == True: #checking the existence of three_of_a_kind
+            three_of_a_kind_oh = True
+
+            name_of_three_of_a_kind_card_oh = [k for k, v in cards_dic_oh.items() if v == 3]
+            value_of_three_of_a_kind_card_oh = float(card_strength[name_of_three_of_a_kind_card_oh[0]])
+
+            rank = 16.0 + 0.01 *value_of_three_of_a_kind_card_oh
+
+        if list_of_rep_oh.count(4) >= 1 and self.check_two_cards_from_hand(repeating_cards_four, players_cards_oh) == True: #checking the existence of four_of_a_kind
+            four_of_kind = True
+
+            name_of_four_of_a_kind_card_oh = [k for k, v in cards_dic_oh.items() if v == 4]
+            value_of_name_of_four_fo_a_kind_card_oh = float(card_strength[name_of_four_of_a_kind_card_oh[0]])
+
+            rank = 20.0 + 0.01 * value_of_name_of_four_fo_a_kind_card_oh
+
+        if one_pair_oh == True and three_of_a_kind_oh == True and self.check_2_from_hand_full_house(repeating_cards_full_house, players_cards_oh) == True: #checking the existence of full_house
 
 
-
-
+            rank = 19.0 + 0.01 * value_of_three_of_a_kind_card_oh
 
 
         return rank
